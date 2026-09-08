@@ -1,0 +1,2 @@
+.list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 22px 0 0; list-style: none; }
+.list li { padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 12px; color: var(--muted); background: #ffffff70; }

@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Kacpra
 
-## Getting Started
+Next.js App Router, React, TypeScript, CSS Modules i GSAP.
 
-First, run the development server:
-
-```bash
+```sh
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Struktura
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `app/` — routing, metadane i główny layout. Pliki `page.tsx` składają widoki.
+- `components/layout/` — wspólna nawigacja i stopka.
+- `components/ui/` — małe współdzielone elementy.
+- `components/motion/` — animacje GSAP / ScrollTrigger.
+- `modules/home/` — sekcje strony głównej.
+- `modules/projects/` — dane, lista projektów i widok case study.
+- `public/images/` — lokalne okładki.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Style sekcji są w sąsiadujących plikach `.module.css`. Globalny CSS zawiera podstawy typografii, kolory i wspólne kontenery. Nie dodajemy katalogu `pages/`, ponieważ routing obsługuje `app/`.
 
-## Learn More
+## Edycja projektów
 
-To learn more about Next.js, take a look at the following resources:
+Treści, technologie, kolor i ścieżkę zdjęcia zmieniaj w `modules/projects/data/projects.ts`.
+Obecne okładki to zdjęcia ilustracyjne z Unsplash, a nie zrzuty realizacji:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Bot SEO: identyfikator obrazu photo-1496181133206-80ce9b88a853
+- HD Estate: identyfikator obrazu photo-1600607687920-4e2a09cf159d
+- Audyt SEO: identyfikator obrazu photo-1485965120184-e220f721d03e
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Źródło plików: `images.unsplash.com`. Przed publikacją uzupełnij własne zdjęcia, zweryfikuj dane case studies oraz adres kontaktowy i domenę w metadanych.
 
-## Deploy on Vercel
+Animacje mają wejście 1,25 s i wyjście około 0,36 s. Respektują `prefers-reduced-motion`, sprzątają instancje przy zmianie strony i pozostawiają treść dostępną bez JavaScriptu.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Weryfikacja
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sh
+npm run lint
+npm run build
+```
