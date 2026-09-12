@@ -1,18 +1,25 @@
+import type { StaticImageData } from "next/image";
+import botSeoImage from "@/app/img/desc-bot-project.png";
+import hdEstateImage from "@/app/img/hd-estate-project.png";
+import technicalSeoImage from "@/app/img/technical-seo-project.png";
+
 export type Project = {
   slug: string;
-  image: string;
+  image: StaticImageData;
   imageAlt: string;
   color: "lavender" | "peach" | "mint";
   title: string;
   kicker: string;
   category: string;
   summary: string;
-  impact: string;
+  status?: "in-progress";
+  impact?: string;
   stack: string[];
   metrics: Array<{ label: string; value: string }>;
   sections: Array<{
     heading: string;
     body: string[];
+    list?: { ordered: boolean; items: string[] };
   }>;
   deliverables: string[];
   beforeAfter: Array<{ label: string; text: string }>;
@@ -21,200 +28,155 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "bot-seo",
-    image: "/images/bot-seo.jpg",
-    imageAlt: "Laptop na jasnym biurku — ilustracja automatyzacji pracy",
+    image: botSeoImage,
+    imageAlt: "Panel AI Description Bot z listą produktów i podglądem wygenerowanego opisu",
     color: "lavender",
     title: "Bot SEO",
     kicker: "AI-powered SEO content ops",
     category: "Technical SEO · Automation · AI workflow",
-    summary:
-      "Od 18 do 2 godzin pracy miesięcznie. Automatyzacja opisów produktów z kontrolą jakości i publikacją w WordPressie.",
-    impact:
-      "Zamiast ręcznie aktualizować setki opisów, zbudowaliśmy kolejkę zadań, walidację treści i integrację z WordPress API, co dało przejrzysty, skalowalny proces SEO.",
-    stack: ["Node.js", "SQLite", "React", "WordPress REST API", "OpenAI API"],
+    summary: "Automatyzacja opisów produktów z kontrolą jakości i publikacją w WordPressie.",
+    impact: "Zamiast ręcznie aktualizować setki opisów, zbudowałem kolejkę zadań, walidację treści i integrację z WordPress API, co dało przejrzysty, skalowalny proces SEO.",
+    stack: [
+      "Node.js",
+      "SQLite",
+      "React",
+      "WordPress REST API",
+      "OpenAI API"
+    ],
     metrics: [
-      { label: "czas aktualizacji", value: "18h → 2h / miesiąc" },
-      { label: "opisy / miesiąc", value: "+1.2k" },
-      { label: "jakość treści", value: "human-in-the-loop" },
+      {
+        label: "opisy",
+        value: "~3000"
+      },
+      {
+        label: "jakość treści",
+        value: "human-in-the-loop"
+      }
     ],
     sections: [
       {
         heading: "Problem biznesowy",
         body: [
-          "Sklep miał bardzo rozbudowany katalog produktów, a opisy SEO były aktualizowane ręcznie przez zespół marketingu i merchandisera. Proces był wolny, niejednolity i nie nadążał za skalą katalogu. Przy każdym nowym produkcie pojawiał się ten sam problem: opis był poprawiany ad hoc, bez standardu, bez nadzoru jakości i bez śladu audytu.",
-          "To było źródło nie tylko spadku efektywności, ale też ryzyka: różne wersje opisów, brak spójności, trudność z testowaniem zmian i niespójny poziom treści dla podobnych produktów.",
-        ],
+          "Sklep, który współtworzyłem z przyjaciółmi, miał bardzo rozbudowany katalog produktów, a opisy SEO były bardzo słabo rozwinięte. Z powodu braku czasu spowodowanego pracą wymyśliłem, jak zautomatyzować proces tworzenia opisów. Projekt początkowo obsługiwany był wyłącznie przez terminal w IDE. Aktualnie aplikacja posiada spójny frontend i backend."
+        ]
       },
       {
         heading: "Dlaczego kolejka statusów zamiast batch",
         body: [
-          "Zamiast od razu uruchamiać masowy batch, potrzebowaliśmy procesu, który daje pełną kontrolę nad każdym zadaniem. Kolejka statusów pending → processing → done/error dała nam przejrzystość, audytowalność i możliwość korekty konkretnego elementu bez wpływu na cały katalog.",
-          "To miało również znaczenie operacyjne: marketing widział, co jest w kolejce i co zostało zaakceptowane, a inżynier miał pełny kontekst błędów, limitów API i momentu, w którym wykonanie należy wznowić albo zatrzymać.",
-        ],
+          "Zamiast od razu uruchamiać masowy batch, potrzebowaliśmy procesu, który daje pełną kontrolę nad każdym zadaniem. Kolejka statusów pending → processing → done/error dała przejrzystość, możliwość audytu i możliwość korekty konkretnego elementu bez wpływu na cały katalog. Dzięki temu można też łatwo wyświetlać statusy zadań po stronie frontendu."
+        ]
       },
       {
         heading: "Architektura pipeline",
         body: [
-          "System miał trzy warstwy: pobieranie danych z WordPress API, kolejkę zadań w SQLite i warstwę AI do generowania i aktualizacji opisów. Każde zadanie przechodziło przez kolejne etapy: pobranie produktu, przygotowanie kontekstu SEO, wygenerowanie treści, walidację jakości i finalne wdrożenie przez WordPress REST API.",
-          "Na poziomie procesu wyglądało to jako: WP API → kolejka zadań → OpenAI API → walidacja → publikacja. To ważne, bo pozwalało nie tylko 'wysłać treść do GPT', ale też kontrolować cały tok produkcji i łatwo debugować każdą fazę.",
-        ],
+          "System miał trzy warstwy: pobieranie i podmianę danych z WordPress API, kolejkę zadań w SQLite oraz warstwę AI do generowania i aktualizacji opisów. Każde zadanie przechodziło przez kolejne etapy: pobranie produktu, przygotowanie kontekstu SEO, wygenerowanie treści, walidację jakości i finalne wdrożenie przez WordPress REST API.",
+          "Na poziomie procesu wyglądało to następująco: WP API → kolejka zadań → OpenAI API → walidacja → WP API (publikacja)."
+        ]
       },
       {
         heading: "Wyzwania techniczne",
         body: [
-          "Największym wyzwaniem były rate limity API, błędy po stronie OpenAI i WordPress oraz konieczność retry bez duplikacji. Dodatkowo trzeba było zadbać o to, by nie nadpisywać dobrych opisów i nie tworzyć niekontrolowanych zmian przy tych samych produktach.",
-          "Dlatego wdrożyliśmy warstwę walidacji: sprawdzanie długości opisu, zgodności z parametrami produktu, spójności z katalogiem i ręczną akceptację na dashboardzie. To dało nam human-in-the-loop bez blokowania całego procesu.",
-        ],
-      },
-      {
-        heading: "Rezultat",
-        body: [
-          "System zmniejszył czas realizacji z 18 godzin do ok. 2 godzin w miesiącu przy tej samej objętości treści, a jednocześnie poprawił spójność i przewidywalność procesu. Zespół miał mniej ręcznej pracy, a opisy były utrzymywane w lepszej jakości na większej skali.",
-          "Największą wartością było jednak to, że proces stał się skalowalny: można było dodawać nowe produkty, nowe typy opisów i kolejne walidacje bez rozbijania całej logiki.",
-        ],
-      },
+          "Największym wyzwaniem, wbrew pozorom, nie okazał się koszt zapytań do API, który pozytywnie mnie zaskoczył. Przy korzystaniu z GPT-4o koszt obsługi 2000 produktów wyniósł niecałe 5 dolarów. Największym realnym problemem okazał się rozrost aplikacji, który zmusił mnie do stworzenia na razie podstawowej wersji.",
+          "Podstawowa wersja aplikacji działa — produkty są pobierane, kolejkowane, przetwarzane i wdrażane. Jednak podczas budowy zauważyłem dwie rzeczy, które muszą zostać dodane: walidację sprawdzającą, czy opis nie powtarza się i nie pokrywa niemal w całości z opisem innego produktu, oraz możliwość ręcznej poprawki poszczególnych opisów przez użytkowników."
+        ]
+      }
     ],
     deliverables: [
-      "Kolejka zadań z statusami pending / processing / done / error",
+      "Kolejka zadań ze statusami pending / processing / done / error",
       "Dashboard React do podglądu i ręcznej akceptacji zmian",
       "Integracja z WordPress REST API",
       "Walidacja treści i logika retry",
-      "Monitoring błędów i audyt zdarzeń",
+      "Monitoring błędów i audyt zdarzeń"
     ],
     beforeAfter: [
       {
         label: "Przed",
-        text: "Ręczna aktualizacja w WordPressie i brak spójnego procesu; opisy zależały od osoby, która miała akurat czas i wiedzę.",
+        text: "Ręczna aktualizacja w WordPressie i brak spójnego procesu; opisy zależały od osoby, która akurat miała czas i wiedzę."
       },
       {
         label: "Po",
-        text: "Scentralizowany pipeline z kolejką, walidacją i akceptacją, który pozwala rozwijać SEO bez chaosu operacyjnego.",
-      },
-    ],
+        text: "Scentralizowany pipeline z kolejką, walidacją i wdrożeniem, który pozwala rozwijać SEO bez chaosu operacyjnego."
+      }
+    ]
   },
   {
     slug: "hd-estate",
-    image: "/images/hd-estate.jpg",
-    imageAlt: "Jasne wnętrze z naturalnymi materiałami — ilustracja branży nieruchomości",
+    image: hdEstateImage,
+    imageAlt: "HD Estate — projekt strony nieruchomości na tablecie i telefonie",
     color: "peach",
     title: "HD Estate",
-    kicker: "Keyword research & information architecture",
-    category: "SEO strategy · information architecture · content planning",
-    summary:
-      "Od wyszukiwania do właściwej oferty. Strategia treści i przejrzysta architektura strony dla marki z branży nieruchomości.",
-    impact:
-      "Projekt połączył research słów kluczowych, mapowanie struktur głównych podstron i przygotowanie logicznej architektury informacji do wdrożenia w Figma.",
-    stack: ["Keyword research", "Content planning", "Figma", "Silo strategy", "UX + SEO"],
-    metrics: [
-      { label: "nisza", value: "nieruchomości" },
-      { label: "model", value: "hub-and-spoke" },
-      { label: "cel", value: "architektura SEO" },
+    status: "in-progress",
+    kicker: "Budowa strony od zera dla firmy z branży nieruchomości",
+    category: "Web development · SEO strategy · information architecture",
+    summary: "Kompleksowy projekt dla firmy znajomej — od hostingu i domeny, przez własnoręcznie tworzony motyw WordPress, po strategię SEO i architekturę treści. Aktualnie w fazie wdrażania.",
+    stack: [
+      "WordPress (custom motyw pisany ręcznie)",
+      "ACF / dedykowana wtyczka (w budowie)",
+      "Figma",
+      "Keyword research",
+      "Silo strategy"
     ],
+    metrics: [],
     sections: [
       {
-        heading: "Kontekst klienta",
+        heading: "Problem",
         body: [
-          "HD Estate to projekt dla firmy działającej w branży nieruchomości, gdzie kluczowe było zbudowanie jasnej, mocnej i dającej się rozwijać struktury witryny. Rynek był mocno konkurencyjny, a szum treściowy utrudniał rozpoznawalność w wynikach wyszukiwania.",
-          "W takich przypadkach najczęściej problemem nie jest jedna fraza, tylko brak spójnej architektury: zbyt wiele podobnych podstron, brak logicznej hierarchii, słaba nawigacja i niewystarczająco czytelne sciezki użytkownika.",
-        ],
+          "Znajoma prowadząca firmę z branży nieruchomości potrzebowała strony internetowej od podstaw — bez gotowego brandingu, treści, motywu ani strategii widoczności w Google."
+        ]
       },
       {
-        heading: "Research i silosy tematyczne",
+        heading: "Co zrobiłem do tej pory",
         body: [
-          "Najpierw zidentyfikowaliśmy główne grupy intencji w niszy: sprzedaż mieszkań, domów, inwestycje, lokalizacje, proces transakcji, doradztwo prawne i obszary miejskie. Następnie każdą grupę zmapowaliśmy na zrozumiałą strukturę treści — od punktów wejścia po strony głębszych tematów.",
-          "To dało nam efektywny model hub-and-spoke: strona główna i główne tematy prowadziły do pogłębionych podstron, które wspierały linkowanie wewnętrzne i zacieśniały relacje semantyczne między treściami.",
-        ],
+          "Wykupiłem domenę i hosting, i buduję od zera własny motyw WordPress (bez gotowych szablonów) dopasowany pod strukturę serwisu. Równolegle przygotowałem pełną strategię contentową: zmapowałem intencje użytkowników w trzech głównych silosach (sprzedający, kupujący, rynek lokalny) i rozpisałem klastry tematyczne z przypisanymi frazami głównymi i uzupełniającymi w modelu hub-and-spoke."
+        ]
       },
       {
-        heading: "Mapowanie na architekturę strony",
-        body: [
-          "W drugim kroku stworzyliśmy strukturę nawigacji i warstwę informacji, która odpowiadała na zamiary użytkownika na każdym etapie: od ogólnej decyzji o inwestycji po szczegółowe zapytania lokalizacyjne i typy nieruchomości.",
-          "Dzięki temu nie tylko zwiększyliśmy potencjał SEO, ale też zbudowaliśmy lepszą ścieżkę konwersji: użytkownik miał prostą drogę od ogólnego zainteresowania do konkretnej oferty i działań biznesowych.",
-        ],
+        heading: "Co jest w trakcie budowy",
+        body: [],
+        list: {
+          ordered: false,
+          items: [
+            "Strony ofert (mieszkania, domy, działki) będą oparte o ACF lub dedykowaną wtyczkę, którą sam tworzę.",
+            "Obecnie tworzę też treści na podstawowe podstrony serwisu (strony filarowe i usługowe) — to nie treści blogowe, tylko właściwe teksty strukturalne strony, które będą fundamentem pod dalszą rozbudowę klastrów."
+          ]
+        }
       },
       {
-        heading: "Artefakty myślenia",
-        body: [
-          "Wartość tego projektu była nie tylko w gotowej witrynie, ale w zrozumieniu, jak strategia treści i UX wzajemnie wspierają SEO. Zbudowaliśmy mapy klastrów, plan treści i makiety w Figma, które pokazywały, w jaki sposób każda podstrona wspiera główną intencję biznesową i jak ma wyglądać wewnętrzne linkowanie.",
-          "To był przykład strategicznego podejścia do SEO: nie 'dodawania kolejnych artykułów', ale tworzenia spójnego systemu tematów, który ma sens zarówno dla użytkownika, jak i dla wyszukiwarki.",
-        ],
-      },
+        heading: "Plan wdrożenia",
+        body: [],
+        list: {
+          ordered: true,
+          items: [
+            "Dokończenie custom motywu i wtyczki pod oferty",
+            "Napisanie treści na strony filarowe i podstrony usługowe",
+            "Wdrożenie struktury silosów i linkowania wewnętrznego",
+            "Publikacja treści blogowych zgodnie z content planem"
+          ]
+        }
+      }
     ],
     deliverables: [
-      "Mapa klastrów i silosów tematycznych",
-      "Plan struktury podstron i nawigacji",
-      "Content plan pod główne intencje użytkownika",
-      "Makiety w Figma z hierarchią informacji",
-      "Strategia linkowania wewnętrznego",
+      "Domena, hosting, custom motyw WP pisany od zera",
+      "Strategia silosów i klastrów tematycznych (3 główne silosy, 26 klastrów)",
+      "Mapa fraz komercyjnych i model hub-and-spoke",
+      "Treści na strony filarowe i usługowe (w trakcie pisania)",
+      "Custom wtyczka / ACF pod oferty (w budowie)"
     ],
-    beforeAfter: [
-      {
-        label: "Przed",
-        text: "Nieruchomościowcy mieli duży katalog treści i zbyt rozproszoną strukturę, której nie dało się łatwo rozwijać i utrzymywać w logicznej kolejności.",
-      },
-      {
-        label: "Po",
-        text: "Opracowana architektura SEO z jasnymi silosami, mocnym linkowaniem i planem contentowym wspierającym zarówno SEO, jak i konwersję.",
-      },
-    ],
+    beforeAfter: []
   },
   {
     slug: "technical-seo-audit",
-    image: "/images/seo-audit.jpg",
-    imageAlt: "Rower na tle ściany — ilustracja branży audytowanego sklepu",
+    image: technicalSeoImage,
+    imageAlt: "Ilustracja Technical SEO z wykresem, lupą i symbolem kodu",
     color: "mint",
     title: "Audyt techniczny SEO",
     kicker: "Crawlability, indexability & site health",
     category: "Technical SEO · diagnostics · implementation roadmap",
-    summary:
-      "Co utrudnia Google dotarcie do produktów? Audyt serwisu rowerowego i konkretny plan napraw, od indeksowania po strukturę kategorii.",
-    impact:
-      "Projekt pozwolił zidentyfikować realne blokady w indeksowaniu i crawlability, a następnie zaplanować priorytety napraw na poziomie strony, kategorii i zasobów technicznych.",
-    stack: ["SEO audit", "Google Search Console", "robots.txt", "canonical tags", "schema markup"],
-    metrics: [
-      { label: "obszar", value: "duży serwis" },
-      { label: "kluczowy cel", value: "crawlability" },
-      { label: "typ błędu", value: "critical + important" },
-    ],
-    sections: [
-      {
-        heading: "Zakres audytu",
-        body: [
-          "Audyt obejmował najważniejsze obszary techniczne: canonicale, breadcrumbs, robots.txt, struktury HTML, indeksowalność formularzy i zasobów, pliki XML sitemap, a także budowę stron kategorii i podkategorii. Największy nacisk położono na to, co naprawdę wpływa na crawl budget i widoczność w Search Console.",
-          "Dla dużych serwisów to szczególnie ważne, bo nawet drobne błędy w canonicalach czy blokadach robots mogą prowadzić do bardzo dużych strat w generowaniu widoczności i zasięgu na kluczowych frazach.",
-        ],
-      },
-      {
-        heading: "Znaleziska i priorytety",
-        body: [
-          "Wyniki zostały podzielone na trzy poziomy: critical, important i nice-to-have. Critical obejmowały rzeczy, które mogły ograniczać indeksowanie kluczowych sekcji, important — problemy, które osłabiały semantykę i niekorzystnie wpływały na architekturę, a nice-to-have — ułatwienia, które poprawiały jakość crawlability i ogólną zgodność techniczną.",
-          "W praktyce firma otrzymała listę konkretnych rekomendacji: poprawa canonicali, korekta breadcrumb schema, usunięcie blokad w robots.txt, ograniczenie duplikacji treści i poprawa struktury sekcji kategorii.",
-        ],
-      },
-      {
-        heading: "Jak to przekłada się na SEO",
-        body: [
-          "Najważniejsze w audycie nie jest samo znalezienie błędów, ale pokazanie, dlaczego wpływają na widoczność i jakie mają konsekwencje dla indexowania, pozycjonowania i zysków z ruchu. To właśnie odróżnia ‘techniczny raport’ od właściwej diagnozy biznesowej: raport musi pokazywać priorytety i podpowiadać, co dodać lub poprawić w praktyce.",
-          "W tym przypadku repozytorium problemów zostało przygotowane w formie gotowej do wdrożenia listy z naciskiem na realną wartość dla biznesu, a nie tylko na checklistę techniczną.",
-        ],
-      },
-    ],
-    deliverables: [
-      "Raport z priorytetyzacją błędów SEO",
-      "Lista critical / important / nice-to-have",
-      "Rekomendacje wdrożeniowe dla devów i content teamu",
-      "Mapowanie ryzyka dla crawlability i indexability",
-      "Plan napraw technicznych i strategii weryfikacji",
-    ],
-    beforeAfter: [
-      {
-        label: "Przed",
-        text: "Serwis miał liczne problemy techniczne, które mogły osłabiać crawl budget, powodować duplikację treści i utrudniać skuteczne indeksowanie ważnych sekcji.",
-      },
-      {
-        label: "Po",
-        text: "Po audycie powstał jasny plan napraw z priorytetyzacją, który jasno pokazuje, co powinno zostać poprawione najpierw, aby odzyskać jakość indeksowania i widoczności.",
-      },
-    ],
+    summary: "Audyt przeprowadziłem na próbce serwisu przy użyciu Screaming Frog w wersji darmowej (crawl ograniczony do 500 URL-i), Google Lighthouse do oceny wydajności oraz ręcznej weryfikacji w przeglądarce, kodzie źródłowym i Rich Results Test.",
+    stack: ["Screaming Frog (wersja darmowa)", "Google Lighthouse", "Rich Results Test", "Przeglądarka i kod źródłowy"],
+    metrics: [],
+    sections: [],
+    deliverables: [],
+    beforeAfter: [],
   },
 ];

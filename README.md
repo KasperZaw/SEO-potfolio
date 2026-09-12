@@ -22,13 +22,7 @@ Style sekcji są w sąsiadujących plikach `.module.css`. Globalny CSS zawiera p
 ## Edycja projektów
 
 Treści, technologie, kolor i ścieżkę zdjęcia zmieniaj w `modules/projects/data/projects.ts`.
-Obecne okładki to zdjęcia ilustracyjne z Unsplash, a nie zrzuty realizacji:
-
-- Bot SEO: identyfikator obrazu photo-1496181133206-80ce9b88a853
-- HD Estate: identyfikator obrazu photo-1600607687920-4e2a09cf159d
-- Audyt SEO: identyfikator obrazu photo-1485965120184-e220f721d03e
-
-Źródło plików: `images.unsplash.com`. Przed publikacją uzupełnij własne zdjęcia, zweryfikuj dane case studies oraz adres kontaktowy i domenę w metadanych.
+Okładki projektów są importowane z `app/img/`. Aby podmienić grafikę, zastąp odpowiedni plik PNG lub zmień import w danych projektu.
 
 Animacje mają wejście 1,25 s i wyjście około 0,36 s. Respektują `prefers-reduced-motion`, sprzątają instancje przy zmianie strony i pozostawiają treść dostępną bez JavaScriptu.
 
@@ -38,3 +32,7 @@ Animacje mają wejście 1,25 s i wyjście około 0,36 s. Respektują `prefers-re
 npm run lint
 npm run build
 ```
+
+## Publikacja na Vercel
+
+Zaimportuj repozytorium GitHub i wybierz preset Next.js. Adresy canonical, robots.txt i sitemap.xml korzystają automatycznie z `VERCEL_PROJECT_PRODUCTION_URL`. Po podpięciu własnej domeny można ustawić `SITE_URL` na pełny adres HTTPS i wykonać ponowne wdrożenie.

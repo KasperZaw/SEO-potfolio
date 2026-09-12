@@ -1,0 +1,9 @@
+.status {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 11px;
+  border-radius: 8px;
+  background: #f0e2d5;
+  color: #70543b;
+  font-size: 12px;
+}

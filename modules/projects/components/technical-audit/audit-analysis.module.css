@@ -1,0 +1,73 @@
+.analysis {
+  max-width: 960px;
+  margin: 56px auto 64px;
+}
+
+.analysis h2 {
+  margin: 60px 0 24px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+  font-size: clamp(25px, 3vw, 36px);
+  line-height: 1.2;
+}
+
+.analysis h2:first-child {
+  margin-top: 0;
+}
+
+.analysis > p {
+  max-width: 800px;
+  margin-bottom: 22px;
+  font-size: 16px;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+
+.tableWrap {
+  margin: 28px 0;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.tableWrap:focus-visible {
+  outline: 2px solid #69669b;
+  outline-offset: 5px;
+}
+
+.tableWrap table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.tableWrap th, .tableWrap td {
+  padding: 18px;
+  vertical-align: top;
+}
+
+.tableWrap th { font-weight: 550; }
+.tableWrap thead { background: #e1ebe3; }
+.tableWrap tbody tr { border-top: 1px solid var(--line); }
+.tableWrap tbody tr:nth-child(even) { background: #f2f1ed; }
+.tableWrap td:last-child { color: var(--muted); }
+
+.critical, .review {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 7px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.critical { background: #f3e0dc; color: #78483e; }
+.review { background: #eee7cf; color: #685924; }
+
+@media (max-width: 600px) {
+  .analysis { margin-top: 32px; }
+  .analysis h2 { margin-top: 42px; padding-top: 24px; }
+  .analysis > p { font-size: 15px; line-height: 1.8; }
+}
