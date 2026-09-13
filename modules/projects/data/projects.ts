@@ -1,3 +1,4 @@
+import storeImage from "@/app/img/Zrzut ekranu 2026-09-13 o 17.54.40.png";
 import type { StaticImageData } from "next/image";
 import botSeoImage from "@/app/img/desc-bot-project.png";
 import hdEstateImage from "@/app/img/hd-estate-project.png";
@@ -26,6 +27,26 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    slug: "sklep-swiateczny",
+    image: storeImage,
+    imageAlt: "Strona główna Sklepu Świątecznego z kolekcją dekoracji i menu kategorii",
+    color: "peach",
+    title: "Sklep Świąteczny",
+    kicker: "UX/UI · E-commerce · Technical SEO",
+    category: "WordPress / WooCommerce · automatyzacja · analiza danych",
+    summary: "Od projektu w Figma do działającego sklepu. UX/UI, rozbudowany katalog, import XML, Technical SEO i analiza danych z Google Search Console.",
+    stack: ["Figma", "WordPress", "WooCommerce", "WoodMart", "XML", "CRON", "Google Search Console"],
+    metrics: [
+      { label: "kliknięcia organiczne w analizowanym okresie", value: "14,5 tys." },
+      { label: "wyświetlenia w Google", value: "3,81 mln" },
+      { label: "średnia pozycja", value: "~10" },
+    ],
+    sections: [],
+    deliverables: [],
+    beforeAfter: [],
+  },
+
   {
     slug: "bot-seo",
     image: botSeoImage,

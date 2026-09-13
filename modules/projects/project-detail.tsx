@@ -1,4 +1,5 @@
 import { ContentStrategy } from "./components/hd-estate/content-strategy";
+import { StoreStudy } from "./components/christmas-store/store-study";
 import { AuditAnalysis } from "./components/technical-audit/audit-analysis";
 import { ProjectStatus } from "./components/project-status";
 import Link from "next/link";
@@ -18,6 +19,7 @@ export function ProjectDetail({ project }: { project: Project }) {
     <ProjectResults project={project} />
     <ProjectStory sections={project.sections} />
     {project.slug === "hd-estate" && <ContentStrategy />}
+    {project.slug === "sklep-swiateczny" && <StoreStudy />}
     {project.slug === "technical-seo-audit" && <AuditAnalysis />}
     {project.deliverables.length > 0 && <Reveal><section className={styles.deliverables}><h2>{project.status === "in-progress" ? "Zakres prac (w realizacji)" : "Co powstało"}</h2><ul>{project.deliverables.map(item => <li key={item}>{item}</li>)}</ul></section></Reveal>}
     {project.beforeAfter.length > 0 && <Reveal><div className={styles.comparison}>{project.beforeAfter.map(item => <section key={item.label}><p className="eyebrow">{item.label}</p><p>{item.text}</p></section>)}</div></Reveal>}

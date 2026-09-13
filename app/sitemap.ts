@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/site-url";
+import { projects } from "@/modules/projects/data/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteUrl;
@@ -10,20 +11,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       priority: 1,
     },
-    {
-      url: `${baseUrl}/projects/bot-seo`,
+    ...projects.map(project => ({
+      url: `${baseUrl}/projects/${project.slug}`,
       lastModified: new Date(),
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/projects/hd-estate`,
-      lastModified: new Date(),
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/projects/technical-seo-audit`,
-      lastModified: new Date(),
-      priority: 0.8,
-    },
+    })),
   ];
 }
